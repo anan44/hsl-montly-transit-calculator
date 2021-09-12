@@ -5,7 +5,6 @@ import (
 )
 
 func NextMonday() string {
-	//today := time.Now().Format("2006-01-02")
 	today := time.Now()
 	var nextMonday time.Time
 	currentWeekday := today.Weekday()
