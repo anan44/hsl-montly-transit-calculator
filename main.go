@@ -11,15 +11,16 @@ func main() {
 	work := hsl.Location{Address: "Eteläesplanadi"}
 	pint := hsl.Location{Address: "One Pint Pub"}
 	wg := sync.WaitGroup{}
-	toWork := hsl.NewRoute("To Work", home, work)
-	toPint := hsl.NewRoute("To Pint", home, pint)
-	routes := []*hsl.Route{&toWork, &toPint}
-	for _, route := range routes {
+	routes := []hsl.Route{
+		hsl.NewRoute("To Work", home, work),
+		hsl.NewRoute("To Pint", home, pint),
+	}
+	for i := range routes {
 		wg.Add(1)
-		route.Calculate(&wg)
+		routes[i].Calculate(&wg)
 	}
 	wg.Wait()
 	for _, route := range routes {
-		fmt.Println(*route)
+		fmt.Println(route)
 	}
 }
