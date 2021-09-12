@@ -31,7 +31,13 @@ func NewRoute(name string, start Location, end Location, timesPerMonth int32) Ro
 	return Route{Name: name, Start: start, End: end, TimesPerMonth: timesPerMonth}
 }
 
-func (r *Route) Estimate(wg *sync.WaitGroup) {
+func NewMonthlyCommutes(routes []Route) MonthlyCommutes {
+	mc := MonthlyCommutes{routes}
+	mc.estimateAllRoutes()
+	return mc
+}
+
+func (r *Route) estimate(wg *sync.WaitGroup) {
 	r.fillLocations()
 	r.getTravelDuration("2021-09-15", "12")
 	wg.Done()
@@ -53,4 +59,13 @@ func (mc *MonthlyCommutes) TotalDuration() time.Duration{
 		total += r.TravelDuration.Seconds() * float64(r.TimesPerMonth) * 2
 	}
 	return time.Duration(total) * time.Second
+}
+
+func (mc *MonthlyCommutes) estimateAllRoutes() {
+	wg := sync.WaitGroup{}
+	for i := range mc.Routes {
+		wg.Add(1)
+		mc.Routes[i].estimate(&wg)
+	}
+	wg.Wait()
 }
