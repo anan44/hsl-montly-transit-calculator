@@ -17,30 +17,29 @@ type routeResponse struct {
 	}
 }
 
-func singleTravelDurationPlan(start Coordinates, end Coordinates, date string, hour string) string {
+func singleTravelDurationPlan(planName string, start Coordinates, end Coordinates, date string, hour string) string {
 	plan := fmt.Sprintf(`
-			  plan(
+			  %s: plan(
 				 from: {lat: %f, lon: %f}
 				 to: {lat: %f, lon: %f}
 				 numItineraries: 1
                  date: "%s"
-				 time: "%s:00:00"
+				 time: "%s:00"
 			  ) {
 				 itineraries {
                    duration
 				 }
-			  }`, start.Latitude, start.Longitude, end.Latitude, end.Longitude, date, hour)
+			  }`, planName,start.Latitude, start.Longitude, end.Latitude, end.Longitude, date, hour)
 	return plan
 }
 
-func (r *Route) getTravelDuration(date string, hour string) {
+func (r *Route)travelDurationApiCall(date string) routeResponse {
 	uri := "https://api.digitransit.fi/routing/v1/routers/hsl/index/graphql"
 	queryJsonData := map[string]string{
-		"query": fmt.Sprintf(`
-			{
-				%s
-			}
-		`, singleTravelDurationPlan(r.Start.Coordinates, r.End.Coordinates, date, hour)),
+		"query": fmt.Sprintf(`{%s %s %s}`,
+			singleTravelDurationPlan("p1", r.Start.Coordinates, r.End.Coordinates, date, "08"),
+			singleTravelDurationPlan("p2", r.Start.Coordinates, r.End.Coordinates, date, "17:45"),
+			singleTravelDurationPlan("p3", r.Start.Coordinates, r.End.Coordinates, date, "22:20")),
 	}
 	jsonBody, err := json.Marshal(queryJsonData)
 
@@ -67,10 +66,19 @@ func (r *Route) getTravelDuration(date string, hour string) {
 	if err != nil {
 		panic(err)
 	}
-	if len(result.Data["plan"].Itineraries) == 0 {
-		panic(err)
+	return result
+}
+
+func (r *Route) getAverageTravelDuration(date string) {
+	result := r.travelDurationApiCall(date)
+	var totalSeconds int64
+	for _, x := range result.Data {
+		if len(x.Itineraries) == 0 {
+			panic("No Itineraries found")
+		}
+		totalSeconds += x.Itineraries[0].Duration
 	}
-	seconds := result.Data["plan"].Itineraries[0].Duration
-	duration := time.Duration(seconds) * time.Second
+	average := totalSeconds / int64(len(result.Data))
+	duration := time.Duration(average) * time.Second
 	r.TravelDuration = duration
 }
