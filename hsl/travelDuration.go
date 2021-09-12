@@ -10,13 +10,11 @@ import (
 )
 
 type routeResponse struct {
-	Data struct {
-		Plan struct {
-			Itineraries []struct {
-				Duration int64 `json:"duration"`
-			} `json:"itineraries"`
-		} `json:"plan"`
-	} `json:"data"`
+	Data map[string]struct {
+		Itineraries []struct {
+			Duration int64
+		}
+	}
 }
 
 func singleTravelDurationPlan(start Coordinates, end Coordinates, date string, hour string) string {
@@ -30,22 +28,12 @@ func singleTravelDurationPlan(start Coordinates, end Coordinates, date string, h
 			  ) {
 				 itineraries {
                    duration
-				   legs {
-					  startTime
-					  endTime
-					  route {
-						shortName
-						longName
-					  }
-					  mode
-					  distance
-				   }
 				 }
 			  }`, start.Latitude, start.Longitude, end.Latitude, end.Longitude, date, hour)
 	return plan
 }
 
-func (r *Route)getTravelDuration(date string, hour string) {
+func (r *Route) getTravelDuration(date string, hour string) {
 	uri := "https://api.digitransit.fi/routing/v1/routers/hsl/index/graphql"
 	queryJsonData := map[string]string{
 		"query": fmt.Sprintf(`
@@ -79,11 +67,10 @@ func (r *Route)getTravelDuration(date string, hour string) {
 	if err != nil {
 		panic(err)
 	}
-	if len(result.Data.Plan.Itineraries) == 0 {
+	if len(result.Data["plan"].Itineraries) == 0 {
 		panic(err)
 	}
-	seconds := result.Data.Plan.Itineraries[0].Duration
+	seconds := result.Data["plan"].Itineraries[0].Duration
 	duration := time.Duration(seconds) * time.Second
 	r.TravelDuration = duration
 }
-
