@@ -8,19 +8,16 @@ import (
 
 func main() {
 	home := hsl.Location{Address: "Leonkatu"}
-	work := hsl.Location{Address: "Eteläesplanadi"}
-	pint := hsl.Location{Address: "One Pint Pub"}
 	wg := sync.WaitGroup{}
-	routes := []hsl.Route{
-		hsl.NewRoute("To Work", home, work),
-		hsl.NewRoute("To Pint", home, pint),
-	}
-	for i := range routes {
+	commutes := hsl.MonthlyCommutes{Routes: []hsl.Route{
+		hsl.NewRoute("To Work", home, hsl.Location{Address: "Eteläesplanadi"}, 5),
+		hsl.NewRoute("To Pint", home, hsl.Location{Address: "One Pint Pub"}, 3),
+		hsl.NewRoute("To Station", home, hsl.Location{Address: "Rautatientori"}, 5),
+	}}
+	for i := range commutes.Routes {
 		wg.Add(1)
-		routes[i].Calculate(&wg)
+		commutes.Routes[i].Estimate(&wg)
 	}
 	wg.Wait()
-	for _, route := range routes {
-		fmt.Println(route)
-	}
+	fmt.Println(commutes.TotalDuration())
 }

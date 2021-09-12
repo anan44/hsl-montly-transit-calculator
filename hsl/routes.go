@@ -23,11 +23,15 @@ type Route struct {
 	TravelDuration time.Duration
 }
 
-func NewRoute(name string, start Location, end Location) Route {
-	return Route{Name: name, Start: start, End: end}
+type MonthlyCommutes struct {
+	Routes []Route
 }
 
-func (r *Route) Calculate(wg *sync.WaitGroup) {
+func NewRoute(name string, start Location, end Location, timesPerMonth int32) Route {
+	return Route{Name: name, Start: start, End: end, TimesPerMonth: timesPerMonth}
+}
+
+func (r *Route) Estimate(wg *sync.WaitGroup) {
 	r.fillLocations()
 	r.getTravelDuration("2021-09-15", "12")
 	wg.Done()
@@ -41,4 +45,12 @@ func (r *Route) fillLocations() {
 func (r *Location) fillCoordinates() {
 	coordinates := addressToCoordinates(r.Address)
 	r.Coordinates = coordinates
+}
+
+func (mc *MonthlyCommutes) TotalDuration() time.Duration{
+	var total float64
+	for _, r := range mc.Routes {
+		total += r.TravelDuration.Seconds() * float64(r.TimesPerMonth) * 2
+	}
+	return time.Duration(total) * time.Second
 }
