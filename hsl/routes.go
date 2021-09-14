@@ -65,7 +65,7 @@ func (mc *MonthlyCommutes) estimateAllRoutes() {
 	wg := sync.WaitGroup{}
 	for i := range mc.Routes {
 		wg.Add(1)
-		mc.Routes[i].estimate(&wg)
+		go mc.Routes[i].estimate(&wg)
 	}
 	wg.Wait()
 }
