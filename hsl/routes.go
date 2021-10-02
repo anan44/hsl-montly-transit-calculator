@@ -57,6 +57,23 @@ func (mc *MonthlyCommutes) TotalDuration() time.Duration {
 	return time.Duration(total) * time.Second
 }
 
+type RouteMonthlyDuration struct {
+	Name     string
+	Duration time.Duration
+}
+
+func (mc *MonthlyCommutes) TotalDurationByRoute() []RouteMonthlyDuration {
+	var allRoutes []RouteMonthlyDuration
+	for _, r := range mc.Routes {
+		monthlyTravel := r.TravelDuration.Seconds() * float64(r.TimesPerMonth) * 2
+		allRoutes = append(allRoutes, RouteMonthlyDuration{
+			Name: r.Name,
+			Duration: time.Duration(monthlyTravel) * time.Second,
+		})
+	}
+	return allRoutes
+}
+
 func (mc *MonthlyCommutes) estimateAllRoutes() {
 	wg := sync.WaitGroup{}
 	for i := range mc.Routes {
