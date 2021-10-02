@@ -4,7 +4,7 @@ import { HttpApi, HttpMethod } from "@aws-cdk/aws-apigatewayv2";
 import { join } from "path";
 import { LambdaProxyIntegration } from "@aws-cdk/aws-apigatewayv2-integrations";
 
-export class InfraStack extends cdk.Stack {
+export class HSLMonthlyTransitStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
