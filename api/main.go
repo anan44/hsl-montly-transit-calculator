@@ -24,6 +24,7 @@ type TransitInput struct {
 type RouteMonthlyCommute struct {
 	Name                string `json:"name"`
 	MonthlyTotalCommute string `json:"monthlyTotalCommute"`
+	PerTrip             string `json:"perTrip"`
 }
 
 type TransitOutput struct {
@@ -38,7 +39,8 @@ func newTransitOutput(commutes *hsl.MonthlyCommutes) TransitOutput {
 	for _, r := range allRoute {
 		monthlyCommuteByRoute = append(monthlyCommuteByRoute, RouteMonthlyCommute{
 			Name:                r.Name,
-			MonthlyTotalCommute: fmt.Sprintf("%v", r.Duration),
+			MonthlyTotalCommute: fmt.Sprintf("%v", r.TotalDuration),
+			PerTrip:             fmt.Sprintf("%v", r.DurationPerTrip),
 		})
 	}
 
