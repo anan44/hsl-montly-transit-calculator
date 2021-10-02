@@ -11,24 +11,20 @@ type Coordinates struct {
 }
 
 type Location struct {
-	Address string
+	Address     string
 	Coordinates Coordinates
 }
 
 type Route struct {
-	Name string
-	Start Location
-	End Location
-	TimesPerMonth int32
+	Name           string
+	Start          Location
+	End            Location
+	TimesPerMonth  int32
 	TravelDuration time.Duration
 }
 
 type MonthlyCommutes struct {
 	Routes []Route
-}
-
-func NewRoute(name string, start Location, end Location, timesPerMonth int32) Route {
-	return Route{Name: name, Start: start, End: end, TimesPerMonth: timesPerMonth}
 }
 
 func NewMonthlyCommutes(routes []Route) MonthlyCommutes {
@@ -53,7 +49,7 @@ func (r *Location) fillCoordinates() {
 	r.Coordinates = coordinates
 }
 
-func (mc *MonthlyCommutes) TotalDuration() time.Duration{
+func (mc *MonthlyCommutes) TotalDuration() time.Duration {
 	var total float64
 	for _, r := range mc.Routes {
 		total += r.TravelDuration.Seconds() * float64(r.TimesPerMonth) * 2
