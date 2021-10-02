@@ -4,11 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"log"
-	"time"
-
+	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"log"
 
 	"hsl-transit/transit-calc/hsl"
 )
@@ -25,7 +24,7 @@ type TransitInput struct {
 }
 
 type TransitOutput struct {
-	MonthlyTotalCommute time.Duration `json:"monthlyTotalCommute"`
+	MonthlyTotalCommute string `json:"monthlyTotalCommute"`
 }
 
 func HandleLambdaEvent(_ context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -47,7 +46,7 @@ func HandleLambdaEvent(_ context.Context, event events.APIGatewayProxyRequest) (
 		})
 	}
 	commutes := hsl.NewMonthlyCommutes(routes)
-	transitOutput := TransitOutput{MonthlyTotalCommute: commutes.TotalDuration()}
+	transitOutput := TransitOutput{MonthlyTotalCommute: fmt.Sprintf("%v", commutes.TotalDuration())}
 	output, err := json.Marshal(transitOutput)
 	if err != nil {
 		log.Printf("Failded to marsal output: %v", transitOutput)
