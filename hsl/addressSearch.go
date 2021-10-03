@@ -2,6 +2,7 @@ package hsl
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -28,7 +29,7 @@ func init() {
 	Client = &http.Client{}
 }
 
-func addressToCoordinates(address string) Coordinates {
+func addressToCoordinates(address string) (Coordinates, error) {
 	uri := "http://api.digitransit.fi/geocoding/v1/search"
 	req, _ := http.NewRequest(http.MethodGet, uri, nil)
 	q := url.Values{}
@@ -38,22 +39,22 @@ func addressToCoordinates(address string) Coordinates {
 
 	res, err := Client.Do(req)
 	if err != nil {
-		panic(err)
+		return Coordinates{}, err
 	}
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		panic(err)
+		return Coordinates{}, err
 	}
 	var result coordinatesResponse
 	err = json.Unmarshal(body, &result)
 	if err != nil {
-		panic(err)
+		return Coordinates{}, err
 	}
 	if len(result.Features) == 0 {
-		panic(err)
+		return Coordinates{}, fmt.Errorf("no features found from result")
 	}
 	return Coordinates{
 		Longitude: result.Features[0].Geometry.Coordinates[0],
 		Latitude:  result.Features[0].Geometry.Coordinates[1],
-	}
+	}, nil
 }

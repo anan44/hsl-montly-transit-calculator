@@ -45,7 +45,10 @@ func (r *Route) fillLocations() {
 }
 
 func (r *Location) fillCoordinates() {
-	coordinates := addressToCoordinates(r.Address)
+	coordinates, err := addressToCoordinates(r.Address)
+	if err != nil {
+		panic(err)
+	}
 	r.Coordinates = coordinates
 }
 
