@@ -35,7 +35,7 @@ func NewMonthlyCommutes(routes []Route) MonthlyCommutes {
 
 func (r *Route) estimate(wg *sync.WaitGroup) {
 	r.fillLocations()
-	r.getAverageTravelDuration(NextMonday())
+	r.getTravelDuration(NextMonday())
 	wg.Done()
 }
 

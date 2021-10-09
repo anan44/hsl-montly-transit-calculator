@@ -7,14 +7,6 @@ import (
 	"testing"
 )
 
-type MockClient struct{}
-
-var DoFunc func(req *http.Request) (*http.Response, error)
-
-func (m MockClient) Do(req *http.Request) (*http.Response, error) {
-	return DoFunc(req)
-}
-
 func TestAddressToCoordinatesSuccess(t *testing.T) {
 	DoFunc = func(req *http.Request) (*http.Response, error) {
 		body := []byte(`{"features":[{"geometry":{"type":"Point","coordinates":[24.9,60.1]}}]}`)

@@ -5,6 +5,10 @@ import (
 	"time"
 )
 
+type MockClient struct{}
+
+var DoFunc func(req *http.Request) (*http.Response, error)
+
 type HTTPClient interface {
 	Do(req *http.Request) (*http.Response, error)
 }

@@ -52,8 +52,7 @@ func (r *Route)travelDurationApiCall(date string) routeResponse {
 	}
 
 	req.Header.Add("Content-Type", "application/json")
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	resp, err := Client.Do(req)
 	if err != nil {
 		panic(err)
 	}
@@ -69,7 +68,7 @@ func (r *Route)travelDurationApiCall(date string) routeResponse {
 	return result
 }
 
-func (r *Route) getAverageTravelDuration(date string) {
+func (r *Route) getTravelDuration(date string) {
 	result := r.travelDurationApiCall(date)
 	var totalSeconds int64
 	for _, x := range result.Data {
