@@ -8,7 +8,7 @@ import (
 )
 
 func TestAddressToCoordinatesSuccess(t *testing.T) {
-	DoFunc = func(req *http.Request) (*http.Response, error) {
+	AddressSearchDoFunc = func(req *http.Request) (*http.Response, error) {
 		body := []byte(`{"features":[{"geometry":{"type":"Point","coordinates":[24.9,60.1]}}]}`)
 		response := http.Response{
 			StatusCode: 200,
@@ -17,7 +17,7 @@ func TestAddressToCoordinatesSuccess(t *testing.T) {
 		return &response, nil
 	}
 	address := "some address"
-	AddressSearchClient = MockClient{}
+	AddressSearchClient = AddressSearchMockClient{}
 	got, err := addressToCoordinates(address)
 	if err != nil {
 		t.Errorf("addressToCoordinates returned an error: %v", err)
@@ -29,7 +29,7 @@ func TestAddressToCoordinatesSuccess(t *testing.T) {
 }
 
 func TestAddressToCoordinatesErrorNoFeatures(t *testing.T) {
-	DoFunc = func(req *http.Request) (*http.Response, error) {
+	AddressSearchDoFunc = func(req *http.Request) (*http.Response, error) {
 		body := []byte(`{"features":[]}`)
 		response := http.Response{
 			StatusCode: 200,
@@ -38,7 +38,7 @@ func TestAddressToCoordinatesErrorNoFeatures(t *testing.T) {
 		return &response, nil
 	}
 	address := "some address"
-	AddressSearchClient = MockClient{}
+	AddressSearchClient = AddressSearchMockClient{}
 	_, err := addressToCoordinates(address)
 	if err == nil {
 		t.Error("addressToCoordinates did not return error when no features was returned")

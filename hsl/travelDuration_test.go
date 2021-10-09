@@ -10,7 +10,7 @@ import (
 
 
 func TestGetTravelDuration(t *testing.T) {
-	DoFunc = func(req *http.Request) (*http.Response, error) {
+	TravelDurationDoFunc = func(req *http.Request) (*http.Response, error) {
 		body := []byte(`{"data":{"p1":{"itineraries":[{"duration":836}]},"p2":{"itineraries":[{"duration":836}]},"p3":{"itineraries":[{"duration":836}]}}}`)
 		response := http.Response{
 			StatusCode: 200,
@@ -18,7 +18,7 @@ func TestGetTravelDuration(t *testing.T) {
 		}
 		return &response, nil
 	}
-	TravelDurationClient = MockClient{}
+	TravelDurationClient = TravelDurationMockClient{}
 	route := Route{
 		Name:          "TestRoute",
 		Start:         Location{Address: "Leonkatu", Coordinates: Coordinates{Longitude: 24.98, Latitude: 60.18}},

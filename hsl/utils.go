@@ -5,16 +5,24 @@ import (
 	"time"
 )
 
-type MockClient struct{}
-
-var DoFunc func(req *http.Request) (*http.Response, error)
-
 type HTTPClient interface {
 	Do(req *http.Request) (*http.Response, error)
 }
 
-func (m MockClient) Do(req *http.Request) (*http.Response, error) {
-	return DoFunc(req)
+type TravelDurationMockClient struct{}
+
+var TravelDurationDoFunc func(req *http.Request) (*http.Response, error)
+
+func (m TravelDurationMockClient) Do(req *http.Request) (*http.Response, error) {
+	return TravelDurationDoFunc(req)
+}
+
+type AddressSearchMockClient struct{}
+
+var AddressSearchDoFunc func(req *http.Request) (*http.Response, error)
+
+func (m AddressSearchMockClient) Do(req *http.Request) (*http.Response, error) {
+	return AddressSearchDoFunc(req)
 }
 
 func init() {
