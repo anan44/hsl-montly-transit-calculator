@@ -17,17 +17,6 @@ type coordinatesResponse struct {
 	} `json:"features"`
 }
 
-type HTTPClient interface {
-	Do(req *http.Request) (*http.Response, error)
-}
-
-var (
-	Client HTTPClient
-)
-
-func init() {
-	Client = &http.Client{}
-}
 
 func addressToCoordinates(address string) (Coordinates, error) {
 	uri := "http://api.digitransit.fi/geocoding/v1/search"
