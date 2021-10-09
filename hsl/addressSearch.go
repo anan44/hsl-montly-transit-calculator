@@ -17,6 +17,7 @@ type coordinatesResponse struct {
 	} `json:"features"`
 }
 
+var AddressSearchClient HTTPClient
 
 func addressToCoordinates(address string) (Coordinates, error) {
 	uri := "http://api.digitransit.fi/geocoding/v1/search"
@@ -26,7 +27,7 @@ func addressToCoordinates(address string) (Coordinates, error) {
 	q.Add("size", "1")
 	req.URL.RawQuery = q.Encode()
 
-	res, err := Client.Do(req)
+	res, err := AddressSearchClient.Do(req)
 	if err != nil {
 		return Coordinates{}, err
 	}

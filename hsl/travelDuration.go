@@ -17,6 +17,10 @@ type routeResponse struct {
 	}
 }
 
+var (
+	TravelDurationClient HTTPClient
+)
+
 func singleTravelDurationPlan(planName string, start Coordinates, end Coordinates, date string, hour string) string {
 	plan := fmt.Sprintf(`
 %s: plan(
@@ -29,11 +33,11 @@ func singleTravelDurationPlan(planName string, start Coordinates, end Coordinate
 	itineraries {
 	duration
 	}
-}`, planName,start.Latitude, start.Longitude, end.Latitude, end.Longitude, date, hour)
+}`, planName, start.Latitude, start.Longitude, end.Latitude, end.Longitude, date, hour)
 	return plan
 }
 
-func (r *Route)travelDurationApiCall(date string) routeResponse {
+func (r *Route) travelDurationApiCall(date string) routeResponse {
 	uri := "https://api.digitransit.fi/routing/v1/routers/hsl/index/graphql"
 	queryJsonData := map[string]string{
 		"query": fmt.Sprintf(`{%s %s %s}`,
@@ -52,7 +56,7 @@ func (r *Route)travelDurationApiCall(date string) routeResponse {
 	}
 
 	req.Header.Add("Content-Type", "application/json")
-	resp, err := Client.Do(req)
+	resp, err := TravelDurationClient.Do(req)
 	if err != nil {
 		panic(err)
 	}

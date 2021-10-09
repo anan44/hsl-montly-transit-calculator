@@ -17,7 +17,7 @@ func TestAddressToCoordinatesSuccess(t *testing.T) {
 		return &response, nil
 	}
 	address := "some address"
-	Client = MockClient{}
+	AddressSearchClient = MockClient{}
 	got, err := addressToCoordinates(address)
 	if err != nil {
 		t.Errorf("addressToCoordinates returned an error: %v", err)
@@ -38,7 +38,7 @@ func TestAddressToCoordinatesErrorNoFeatures(t *testing.T) {
 		return &response, nil
 	}
 	address := "some address"
-	Client = MockClient{}
+	AddressSearchClient = MockClient{}
 	_, err := addressToCoordinates(address)
 	if err == nil {
 		t.Error("addressToCoordinates did not return error when no features was returned")

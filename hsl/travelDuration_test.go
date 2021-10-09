@@ -21,7 +21,7 @@ func TestGetTravelDuration(t *testing.T) {
 		}
 		return &response, nil
 	}
-	Client = MockClient{}
+	TravelDurationClient = MockClient{}
 	route := Route{
 		Name:          "TestRoute",
 		Start:         Location{Address: "Leonkatu", Coordinates: Coordinates{Longitude: 24.98, Latitude: 60.18}},
