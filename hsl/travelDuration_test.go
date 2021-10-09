@@ -23,10 +23,10 @@ func TestGetTravelDuration(t *testing.T) {
 	}
 	Client = MockClient{}
 	route := Route{
-		Name:           "TestRoute",
-		Start:          Location{Address: "Leonkatu", Coordinates: Coordinates{Longitude: 24.98, Latitude: 60.18}},
-		End:            Location{Address: "Rautatientori", Coordinates: Coordinates{Longitude: 24.93, Latitude: 60.17}},
-		TimesPerMonth:  1,
+		Name:          "TestRoute",
+		Start:         Location{Address: "Leonkatu", Coordinates: Coordinates{Longitude: 24.98, Latitude: 60.18}},
+		End:           Location{Address: "Rautatientori", Coordinates: Coordinates{Longitude: 24.93, Latitude: 60.17}},
+		TimesPerMonth: 1,
 	}
 	route.getTravelDuration("2021-10-12")
 
@@ -34,5 +34,27 @@ func TestGetTravelDuration(t *testing.T) {
 	want := time.Duration(836) * time.Second
 	if got != want {
 		t.Errorf("want: %v, got: %v", want, got)
+	}
+}
+
+func TestSingleTravelDurationPlan(t *testing.T) {
+
+	start := Coordinates{Longitude: 24.98, Latitude: 60.18}
+	end := Coordinates{Longitude: 24.93, Latitude: 60.17}
+	got := singleTravelDurationPlan("TestPlan", start, end, "2021-10-12", "12:15")
+	want := `
+TestPlan: plan(
+	from: {lat: 60.180000, lon: 24.980000}
+	to: {lat: 60.170000, lon: 24.930000}
+	numItineraries: 1
+	date: "2021-10-12"
+	time: "12:15:00"
+) {
+	itineraries {
+	duration
+	}
+}`
+	if got != want {
+		t.Errorf("want:\n%v\ngot:\n%v", want, got)
 	}
 }

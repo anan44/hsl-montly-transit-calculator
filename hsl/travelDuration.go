@@ -19,17 +19,17 @@ type routeResponse struct {
 
 func singleTravelDurationPlan(planName string, start Coordinates, end Coordinates, date string, hour string) string {
 	plan := fmt.Sprintf(`
-			  %s: plan(
-				 from: {lat: %f, lon: %f}
-				 to: {lat: %f, lon: %f}
-				 numItineraries: 1
-                 date: "%s"
-				 time: "%s:00"
-			  ) {
-				 itineraries {
-                   duration
-				 }
-			  }`, planName,start.Latitude, start.Longitude, end.Latitude, end.Longitude, date, hour)
+%s: plan(
+	from: {lat: %f, lon: %f}
+	to: {lat: %f, lon: %f}
+	numItineraries: 1
+	date: "%s"
+	time: "%s:00"
+) {
+	itineraries {
+	duration
+	}
+}`, planName,start.Latitude, start.Longitude, end.Latitude, end.Longitude, date, hour)
 	return plan
 }
 
