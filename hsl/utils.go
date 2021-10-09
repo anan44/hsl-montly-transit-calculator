@@ -13,6 +13,9 @@ type HTTPClient interface {
 	Do(req *http.Request) (*http.Response, error)
 }
 
+func (m MockClient) Do(req *http.Request) (*http.Response, error) {
+	return DoFunc(req)
+}
 
 func init() {
 	TravelDurationClient = &http.Client{}

@@ -8,9 +8,6 @@ import (
 	"time"
 )
 
-func (m MockClient) Do(req *http.Request) (*http.Response, error) {
-	return DoFunc(req)
-}
 
 func TestGetTravelDuration(t *testing.T) {
 	DoFunc = func(req *http.Request) (*http.Response, error) {
